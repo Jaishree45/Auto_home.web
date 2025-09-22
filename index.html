@@ -136,7 +136,7 @@ const servoValue = document.getElementById('servoValue');
 servoSlider.addEventListener('input', () => {
   servoValue.textContent = servoSlider.value;
   // Send value in single quotes
-  firebase.database().ref('sensor/servo').set("'" + servoSlider.value + "'");
+  firebase.database().ref('sensor/servo').set("" + servoSlider.value + "");
 });
 
 
