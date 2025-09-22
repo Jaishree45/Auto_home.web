@@ -131,12 +131,14 @@
 
 
     // Servo Slider
-    const servoSlider = document.getElementById('servoSlider');
-    const servoValue = document.getElementById('servoValue');
-    servoSlider.addEventListener('input', () => {
-      servoValue.textContent = servoSlider.value;
-      firebase.database().ref('sensor/servo').set(Number(servoSlider.value));
-    });
+const servoSlider = document.getElementById('servoSlider');
+const servoValue = document.getElementById('servoValue');
+servoSlider.addEventListener('input', () => {
+  servoValue.textContent = servoSlider.value;
+  // Send value in single quotes
+  firebase.database().ref('sensor/servo').set("'" + servoSlider.value + "'");
+});
+
 
     // Read Temperature & Humidity
     const tempEl = document.getElementById('tempVal');
