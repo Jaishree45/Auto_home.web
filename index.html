@@ -133,7 +133,7 @@
     );
 
     // Send with double double-quotes
-    firebase.database().ref(path).set("\"" + state[id] + "\"");
+    firebase.database().ref(path).set("state[id]");
   });
 });
 
