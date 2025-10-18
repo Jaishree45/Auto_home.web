@@ -16,69 +16,66 @@
 </head>
 <body class="min-h-screen bg-gradient-to-br from-white-700 via-white-700 to-white-700 text-black antialiased">
   <main class="max-w-5xl mx-auto p-6">
-    <!-- Card -->
     <section class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl shadow-2xl overflow-hidden">
       <div class="p-6 sm:p-8 flex flex-col gap-6">
         <header>
           <h1 class="text-3xl font-bold">Home Automation</h1>
           <a href="https://drive.google.com/file/d/1vkdFTMj-3WZLEkeqQfQ7xFtSx4dLFclQ/view" download
-   class="fixed up-6 right-6 bg-white-500 hover:bg-white-600 
-          text-black font-bold py-3 px-6 rounded-full shadow-lg 
-          transition transform hover:scale-105">
-  Download App
-</a>
+            class="fixed up-6 right-6 bg-white-500 hover:bg-white-600 
+            text-black font-bold py-3 px-6 rounded-full shadow-lg 
+            transition transform hover:scale-105">
+            Download App
+          </a>
           <p class="text-black/80 mt-1">Control your devices and see live Temperature and Humidity</p>
         </header>
 
-        <!-- Buttons Grid -->
+        <!-- Buttons -->
         <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          <!-- LED A -->
           <div class="group bg-white/5 border border-black/10 rounded-xl p-4 flex flex-col gap-3" data-id="A">
             <span class="text-sm font-semibold">LED A</span>
             <button type="button" data-role="send-button"
               class="rounded-xl h-28 flex items-center justify-center
-                     bg-gradient-to-br from-black-400/90 to-black-400/90 text-fuchsia-950
-                     font-extrabold text-6xl value-glow shadow-lg transition">
+              bg-gradient-to-br from-black-400/90 to-black-400/90 text-fuchsia-950
+              font-extrabold text-6xl value-glow shadow-lg transition">
               <span class="current-value">0</span>
             </button>
           </div>
-          <!-- LED B -->
+
           <div class="group bg-white/5 border border-black/10 rounded-xl p-4 flex flex-col gap-3" data-id="B">
             <span class="text-sm font-semibold">LED B</span>
             <button type="button" data-role="send-button"
               class="rounded-xl h-28 flex items-center justify-center
-                     bg-gradient-to-br from-black-300/90 to-black-400/90 text-amber-900
-                     font-extrabold text-6xl value-glow shadow-lg transition">
+              bg-gradient-to-br from-black-300/90 to-black-400/90 text-amber-900
+              font-extrabold text-6xl value-glow shadow-lg transition">
               <span class="current-value">0</span>
             </button>
           </div>
-          <!-- LED C -->
+
           <div class="group bg-white/5 border border-black/10 rounded-xl p-4 flex flex-col gap-3" data-id="C">
             <span class="text-sm font-semibold">LED C</span>
             <button type="button" data-role="send-button"
               class="rounded-xl h-28 flex items-center justify-center
-                     bg-gradient-to-br from-black-300/90 to-black-400/90 text-sky-900
-                     font-extrabold text-6xl value-glow shadow-lg transition">
+              bg-gradient-to-br from-black-300/90 to-black-400/90 text-sky-900
+              font-extrabold text-6xl value-glow shadow-lg transition">
               <span class="current-value">0</span>
             </button>
           </div>
-          <!-- Fan -->
+
           <div class="group bg-white/5 border border-black/10 rounded-xl p-4 flex flex-col gap-3" data-id="D">
             <span class="text-sm font-semibold">Fan</span>
             <button type="button" data-role="send-button"
               class="rounded-xl h-28 flex items-center justify-center
-                     bg-gradient-to-br from-black-300/90 to-black-400/90 text-emerald-900
-                     font-extrabold text-6xl value-glow shadow-lg transition">
+              bg-gradient-to-br from-black-300/90 to-black-400/90 text-emerald-900
+              font-extrabold text-6xl value-glow shadow-lg transition">
               <span class="current-value">0</span>
             </button>
           </div>
         </section>
 
-        <!-- Servo Motor Slider -->
+        <!-- Servo -->
         <section class="bg-white/5 border border-black/10 rounded-xl p-4">
           <h2 class="text-lg font-semibold mb-2">Gate Position</h2>
-          <input id="servoSlider" type="range" min="0" max="180" value="90"
-            class="w-full accent-black-500">
+          <input id="servoSlider" type="range" min="0" max="180" value="90" class="w-full accent-black-500">
           <p class="mt-2">Angle: <span id="servoValue" class="font-bold">90</span>°</p>
         </section>
 
@@ -91,9 +88,6 @@
           <div>
             <p class="text-sm text-black/70">💧 Humidity</p>
             <p id="humVal" class="text-2xl font-bold">-- %</p>
-            <!-- Add this inside <body>, just before </body> -->
-
-
           </div>
         </section>
       </div>
@@ -101,7 +95,7 @@
   </main>
 
   <script>
-    // --- Firebase Setup (replace with your config if needed) ---
+    // --- Firebase Setup ---
     const firebaseConfig = {
       apiKey: "AIzaSyDr3meWiL6TlZdC5x1Qw3ORpi4CGqwyDyo",
       authDomain: "esp8266test-fa10b.firebaseapp.com",
@@ -112,51 +106,60 @@
       appId: "1:40474862878:web:8a7a4a5e2e3d40059b950f",
       measurementId: "G-6NP221J4JV"
     };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
     // --- State for Buttons ---
-    const state = { A:0, B:0, C:0, D:0 };
+    const state = { A: 0, B: 0, C: 0, D: 0 };
 
-    // Update Firebase when button pressed
+    // ✅ Live Update from Firebase
+    const mapping = { A: 1, B: 2, C: 3, D: 4 };
+
+    Object.entries(mapping).forEach(([key, num]) => {
+      const ref = firebase.database().ref("sensor/ButtonState" + num);
+      const btn = document.querySelector(`[data-id="${key}"] .current-value`);
+
+      // Listen for changes
+      ref.on('value', snap => {
+        const val = snap.val();
+        if (val !== null) {
+          state[key] = Number(val);
+          btn.textContent = val;
+        }
+      });
+    });
+
+    // ✅ Button Click to toggle and update Firebase
     document.querySelectorAll('[data-role="send-button"]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const id = btn.closest('[data-id]').getAttribute('data-id');
+      btn.addEventListener('click', () => {
+        const id = btn.closest('[data-id]').getAttribute('data-id');
+        const path = "sensor/ButtonState" + mapping[id];
+        const newValue = state[id] === 1 ? 0 : 1;
+        firebase.database().ref(path).set(newValue);
+      });
+    });
 
-    // Toggle as string
-    state[id] = state[id] === 0 ? 1 : 0;
-    btn.querySelector('.current-value').textContent = state[id];
+    // ✅ Servo Control
+    const servoSlider = document.getElementById('servoSlider');
+    const servoValue = document.getElementById('servoValue');
+    servoSlider.addEventListener('input', () => {
+      servoValue.textContent = servoSlider.value;
+      firebase.database().ref('sensor/servo').set(Number(servoSlider.value));
+    });
 
-    // Map buttons to Firebase paths
-    const path = "sensor/ButtonState" + (
-      id === 'A' ? 1 : id === 'B' ? 2 : id === 'C' ? 3 : 4
-    );
-
-    // Send with double double-quotes
-    firebase.database().ref(path).set("" + state[id] + "");
-  });
-});
-
-
-
-    // Servo Slider
-const servoSlider = document.getElementById('servoSlider');
-const servoValue = document.getElementById('servoValue');
-servoSlider.addEventListener('input', () => {
-  servoValue.textContent = servoSlider.value;
-  // Send value in single quotes
-  firebase.database().ref('sensor/servo').set("" + servoSlider.value + "");
-});
-
-
-    // Read Temperature & Humidity
+    // ✅ Temperature & Humidity Live Update
     const tempEl = document.getElementById('tempVal');
     const humEl = document.getElementById('humVal');
+
     firebase.database().ref('sensor/temp/temperature').on('value', snap => {
-      tempEl.textContent = snap.val() ? snap.val() + " °C" : "-- °C";
+      const val = snap.val();
+      tempEl.textContent = val ? `${val} °C` : "-- °C";
     });
+
     firebase.database().ref('sensor/temp/humidity').on('value', snap => {
-      humEl.textContent = snap.val() ? snap.val() + " %" : "-- %";
+      const val = snap.val();
+      humEl.textContent = val ? `${val} %` : "-- %";
     });
   </script>
 </body>
